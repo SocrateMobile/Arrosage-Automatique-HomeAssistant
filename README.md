@@ -75,7 +75,7 @@ ensuite voici le code pour l ESP8266
 c est mon premier code, donc il est certainement optimisable
 je l’ai créé a partir de la doc ESPHome, de divers projets glanés sur le net, mais également en tâtonnant avec ChatGPT que je découvre en même temps (il peut donner des pistes, mais rarement une solution a appliquer directement, mais cela m a aidé)
 
-'''
+```
 # code v2 ARROSAGE AUTOMATIQUE
 # Controle d'une plaque de 8 relais, 5 utilisés dans le montage, GPIO D0,D1,D2,D3,D4
 # 2 capteurs de température Dallas DS18B20 (un interrieur au boitier, un température exterieure), sur D7
@@ -617,4 +617,4 @@ script:
         # si vous souhaitez faire évoluer ce code et partager vos amélioration, je suis preneur ;-)
         #  socratemobile@protonmail.com
         #
-'''
+```
