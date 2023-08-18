@@ -26,12 +26,13 @@ dans HA il faut créer 5 entrées nommées tempo_temps1 à tempo_temps5 ( 8 si v
 
 ![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/5entrées.JPG)
 
-```
-# définition des variables pour le temps d'arrosage
-# un timmer propre a chaque zone pour un mode personnalisé
-# a positionner dans un fichier input_number.yaml dans le même répertoire que le fichier configuration.yaml
-# et dans le fichier configuration.yaml il faut ajouter : input_number: !include input_number.yaml
 
+maintenant, nous allons définir les variables pour le temps d'arrosage :
+un timmer propre a chaque zone pour un mode personnalisé, 
+Ce code est à coller dans un fichier nommé "input_number.yaml", à mettre dans le même répertoire que le fichier configuration.yaml
+Ensuite, dans le fichier configuration.yaml il faut ajouter : input_number: !include input_number.yaml
+
+```
   tempo_temps1:
     name: tempo_temps1
     initial: 1
