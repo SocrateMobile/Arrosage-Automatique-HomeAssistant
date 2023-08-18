@@ -26,3 +26,47 @@ In HA, you need to create 5 entries
 dans HA il faut créer 5 entrées ( 5 vannes, 8 si vous en avez 8)
 
 
+`# définition des variables pour le temps d'arrosage
+# un timmer propre a chaque zone pour un mode personnalisé
+# a positionner dans un fichier input_number.yaml dans le même répertoire que le fichier configuration.yaml
+# et dans le fichier configuration: input_number: !include input_number.yaml
+
+  tempo_temps1:
+    name: tempo_temps1
+    initial: 1
+    min: 1
+    max: 20
+    step: 1
+    unit_of_measurement: "min"
+
+  tempo_temps2:
+    name: tempo_temps2
+    initial: 1
+    min: 1
+    max: 20
+    step: 1
+    unit_of_measurement: "min"
+    
+  tempo_temps3:
+    name: tempo_temps3
+    initial: 1
+    min: 1
+    max: 20
+    step: 1
+    unit_of_measurement: "min"
+    
+  tempo_temps4:
+    name: tempo_temps4
+    initial: 1
+    min: 1
+    max: 20
+    step: 1
+    unit_of_measurement: "min"
+    
+  tempo_temps5:
+    name: tempo_temps5
+    initial: 1
+    min: 1
+    max: 20
+    step: 1
+    unit_of_measurement: "min"`
