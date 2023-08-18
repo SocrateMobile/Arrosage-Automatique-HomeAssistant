@@ -24,7 +24,7 @@ Commencons...
 
 dans HA il faut créer 5 entrées ( 5 vannes, 8 si vous en avez 8)
 
-
+![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/5entrées.JPG)
 
 ```
 # définition des variables pour le temps d'arrosage
