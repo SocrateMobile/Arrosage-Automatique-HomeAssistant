@@ -1,0 +1,47 @@
+type: picture-elements
+image: \local\plans\Perso\Arrosage.png
+elements:
+  - type: image
+    entity: switch.gpio_arrosage_v2_lancer_5_mn_d_arrosage
+    tap_action:
+      action: toggle
+    hold_action:
+      action: 'on'
+    image: \local\plans\Perso\5MN.png
+    state_filter:
+      'on': brightness(130%) saturate(1.5) drop-shadow(0px 0px 10px gold)
+      'off': brightness(80%) saturate(0.8)
+    style:
+      top: 60%
+      left: 16%
+      width: 30%
+      padding: 30%
+  - type: image
+    entity: switch.gpio_arrosage_v2_lancer_10_mn_d_arrosage
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    image: \local\plans\Perso\10MN.png
+    state_filter:
+      'on': brightness(130%) saturate(1.5) drop-shadow(0px 0px 10px gold)
+      'off': brightness(80%) saturate(0.8)
+    style:
+      top: 60%
+      left: 85%
+      width: 30%
+  - type: image
+    entity: switch.gpio_arrosage_v2_reboot_gpio_arrosage_v2
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    image: \local\plans\Perso\stop.png
+    state_filter:
+      'on': brightness(130%) saturate(1.5) drop-shadow(0px 0px 10px gold)
+      'off': brightness(80%) saturate(0.8)
+    style:
+      top: 87%
+      left: 50%
+      width: 12%
+      padding: 30%
