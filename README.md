@@ -77,7 +77,7 @@ Ensuite, dans le fichier configuration.yaml il faut ajouter : input_number: !inc
 
 A cette étape, il vous faut éditer ou créer le fichier secret.yaml DANS le répartoir config / esphome de votre Home Assistant
 et y intégrer :
-
+```
 key_arrosage: "votre token API de votre ESP"
 ota_arrosage: "votre token OTA"
 wifi_ssid: "le nom de votre réseau WIFI de la maison"
@@ -85,6 +85,7 @@ wifi_password: "la clé de votre réseau wifi de la maison"
 mdp_hotspot: "la clé du hotspot de votre ESP en cas de plantage"
 server_username: le login que vous souhaitez pour accéder à l interface WEB de votre ESP
 server_password: le MDP que vous souhaitez pour accéder à l interface WEB de votre ESP
+```
 
 Voici maintenant le code pour l ESP8266, à mettre dans ESPHome.
 C est mon premier code, il est donc certainement optimisable
@@ -235,7 +236,6 @@ text_sensor:
 # Example configuration entry
 dallas:
   - pin: ${pin_dallas}
-
  
 globals:
   - id: temps1
