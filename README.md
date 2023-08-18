@@ -22,7 +22,7 @@ la troisième est à mon sens la plus intéressante: le temps d arrosage de chaq
 
 Commencons...
 
-dans HA il faut créer 5 entrées ( 5 vannes, 8 si vous en avez 8)
+dans HA il faut créer 5 entrées nommées tempo_temps1 à tempo_temps5 ( 8 si vous en avez 8 vannes)
 
 ![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/5entrées.JPG)
 
@@ -30,7 +30,7 @@ dans HA il faut créer 5 entrées ( 5 vannes, 8 si vous en avez 8)
 # définition des variables pour le temps d'arrosage
 # un timmer propre a chaque zone pour un mode personnalisé
 # a positionner dans un fichier input_number.yaml dans le même répertoire que le fichier configuration.yaml
-# et dans le fichier configuration: input_number: !include input_number.yaml
+# et dans le fichier configuration.yaml il faut ajouter : input_number: !include input_number.yaml
 
   tempo_temps1:
     name: tempo_temps1
@@ -72,9 +72,9 @@ dans HA il faut créer 5 entrées ( 5 vannes, 8 si vous en avez 8)
     step: 1
     unit_of_measurement: "min"
 ```
-ensuite voici le code pour l ESP8266
-c est mon premier code, donc il est certainement optimisable
-je l’ai créé a partir de la doc ESPHome, de divers projets glanés sur le net, mais également en tâtonnant avec ChatGPT que je découvre en même temps (il peut donner des pistes, mais rarement une solution a appliquer directement, mais cela m a aidé)
+ensuite voici le code pour l ESP8266, c est mon premier code, donc il est certainement optimisable
+je l’ai créé a partir de la doc ESPHome, de divers projets glanés sur le net, mais également en tâtonnant avec ChatGPT que je découvre en même temps
+(il peut donner des pistes, mais rarement une solution a appliquer directement, mais cela m a aidé)
 
 ```
 # code v2 ARROSAGE AUTOMATIQUE
@@ -620,13 +620,14 @@ script:
         #
 ```
 
-reste à créer les 3 cartes pour gérer l affichage dans Home Assistant :
+Il ne reste plus qu'à créer les 3 cartes pour gérer l affichage dans Home Assistant :
 
 ![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/3cartes.jpeg)
 
 Le code des trois cartes:
-first card
+
 carte 1:
+
 ```
 type: picture-elements
 image: \local\plans\Perso\Arrosage.png
@@ -678,6 +679,7 @@ elements:
 ```
 
 Le code de la carte 2
+
 ```
 type: entities
 entities:
@@ -706,7 +708,8 @@ header:
     action: none
 
 ```
-code de la carte 3
+
+et enfin, le code de la carte 3
 
 ```
 type: vertical-stack
