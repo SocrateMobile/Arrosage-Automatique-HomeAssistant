@@ -14,4 +14,4 @@ Un troisième bouton sera cablé sur le GPIO RST & GND: un appuie, au reboot tou
 
 Et dans un second temps, la création de trois cartes dans HA pour piloter le tout:
 
-![alt text](https://github.com/SocrateMobile/Affichage-Flipr-HomeAssistant/blob/main/3cartes.jpg?raw=true)
+![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/3cartes.jpg?raw=true)
