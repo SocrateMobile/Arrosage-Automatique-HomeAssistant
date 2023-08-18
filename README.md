@@ -15,3 +15,14 @@ Un troisième bouton sera cablé sur le GPIO RST & GND: un appuie, au reboot tou
 Et dans un second temps, la création de trois cartes dans HA pour piloter le tout:
 
 ![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/3cartes.jpeg)
+
+la première carte est a utiliser pour soit lancer une séquence d’arrosage de 5mn par zone, soit 10mn, et au cas ou… un stop
+
+la deuxième, sert visualiser les zones d arrosage, et a les démarrer / arrêter manuellement
+
+la troisième est à mon sens la plus intéressante: le temps d arrosage de chaque zone peut être ajusté entre 1 et 20mn, et on lance l enchainement des séquences
+
+In HA, you need to create 5 entries
+dans HA il faut créer 5 entrées ( 5 vannes, 8 si vous en avez 8)
+
+![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/Carte%201)
