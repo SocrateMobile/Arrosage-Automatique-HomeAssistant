@@ -1,0 +1,25 @@
+type: entities
+entities:
+  - entity: switch.gpio_arrosage_v2_1bambous
+    name: 1 Bambous
+  - entity: switch.gpio_arrosage_v2_2jardin_cote_droit
+    name: 2 Jardin côté droit
+  - entity: switch.gpio_arrosage_v2_3jardin_cote_gauche
+    name: 3 Jardin côté gauche
+  - entity: switch.gpio_arrosage_v2_4bordures
+    name: 4 Bordures
+  - entity: switch.gpio_arrosage_v2_5_potager
+    name: 5 Potager
+  - entity: switch.gpio_arrosage_v2_lancer_10_mn_d_arrosage
+    name: Lancer 10 mn d'arrosage
+  - entity: switch.gpio_arrosage_v2_lancer_5_mn_d_arrosage
+    name: Lancer 5 mn d'arrosage
+  - entity: switch.gpio_arrosage_v2_lancer_l_arrosage_manuel
+title: GPIO Arrosage V2
+header:
+  type: picture
+  image: \local\plans\Perso\arrosage_bandeau2.png
+  tap_action:
+    action: none
+  hold_action:
+    action: none
