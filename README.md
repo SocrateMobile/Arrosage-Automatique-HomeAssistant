@@ -5,11 +5,11 @@ Je vous partage mon projet actuel le plus abouti: l’arrosage automatique.
 Le projet vise à remplacer mon système rainbird, dont le dongle wifi à rendu l’âme après deux saisons et demi …
 En synthèse: utiliser un ESP8266 pour contrôler une plaque de 8 relais, 5 utilisés dans le montage sur les GPIO D0,D1,D2,D3,D4
 
-capteurs de température Dallas DS18B20 (un intérieur au boîtier, l’autre pour la température extérieure), sur D7
-1 capteur d’humidité du sol (yl38), sur A0
+capteurs de température Dallas DS18B20 (le premier intérieur au boîtier, l’autre pour la température extérieure), sur D7 et le GRD
+1 capteur d’humidité du sol (yl38), sur A0 et sur le GRD
 deux boutons poussoir pour lancer une automatisation :
-5 minutes d’arrosage de toutes les zones sur D5
-10 minutes d’arrosage de toutes les zones sur D6
+5 minutes d’arrosage de toutes les zones sur D5 et sur le GRD
+10 minutes d’arrosage de toutes les zones sur D6 et sur le GRD
 Un troisième bouton sera cablé sur le GPIO RST & GND: un appuie, au reboot toutes les vannes seront éteintes
 
 Et dans un second temps, la création de trois cartes dans HA pour piloter le tout:
@@ -617,4 +617,124 @@ script:
         # si vous souhaitez faire évoluer ce code et partager vos amélioration, je suis preneur ;-)
         #  socratemobile@protonmail.com
         #
+```
+
+reste à créer les 3 cartes pour gérer l affichage dans Home Assistant :
+
+![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/3cartes.jpeg)
+
+Le code des trois cartes:
+first card
+carte 1:
+```
+type: picture-elements
+image: \local\plans\Perso\Arrosage.png
+elements:
+  - type: image
+    entity: switch.gpio_arrosage_v2_lancer_5_mn_d_arrosage
+    tap_action:
+      action: toggle
+    hold_action:
+      action: 'on'
+    image: \local\plans\Perso\5MN.png
+    state_filter:
+      'on': brightness(130%) saturate(1.5) drop-shadow(0px 0px 10px gold)
+      'off': brightness(80%) saturate(0.8)
+    style:
+      top: 60%
+      left: 16%
+      width: 30%
+      padding: 30%
+  - type: image
+    entity: switch.gpio_arrosage_v2_lancer_10_mn_d_arrosage
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    image: \local\plans\Perso\10MN.png
+    state_filter:
+      'on': brightness(130%) saturate(1.5) drop-shadow(0px 0px 10px gold)
+      'off': brightness(80%) saturate(0.8)
+    style:
+      top: 60%
+      left: 85%
+      width: 30%
+  - type: image
+    entity: switch.gpio_arrosage_v2_reboot_gpio_arrosage_v2
+    tap_action:
+      action: toggle
+    hold_action:
+      action: more-info
+    image: \local\plans\Perso\stop.png
+    state_filter:
+      'on': brightness(130%) saturate(1.5) drop-shadow(0px 0px 10px gold)
+      'off': brightness(80%) saturate(0.8)
+    style:
+      top: 87%
+      left: 50%
+      width: 12%
+      padding: 30%
+```
+
+Le code de la carte 2
+```
+type: entities
+entities:
+  - entity: switch.gpio_arrosage_v2_1bambous
+    name: 1 Bambous
+  - entity: switch.gpio_arrosage_v2_2jardin_cote_droit
+    name: 2 Jardin côté droit
+  - entity: switch.gpio_arrosage_v2_3jardin_cote_gauche
+    name: 3 Jardin côté gauche
+  - entity: switch.gpio_arrosage_v2_4bordures
+    name: 4 Bordures
+  - entity: switch.gpio_arrosage_v2_5_potager
+    name: 5 Potager
+  - entity: switch.gpio_arrosage_v2_lancer_10_mn_d_arrosage
+    name: Lancer 10 mn d'arrosage
+  - entity: switch.gpio_arrosage_v2_lancer_5_mn_d_arrosage
+    name: Lancer 5 mn d'arrosage
+  - entity: switch.gpio_arrosage_v2_lancer_l_arrosage_manuel
+title: GPIO Arrosage V2
+header:
+  type: picture
+  image: \local\plans\Perso\arrosage_bandeau2.png
+  tap_action:
+    action: none
+  hold_action:
+    action: none
+
+```
+code de la carte 3
+
+```
+type: vertical-stack
+cards:
+  - type: entities
+    entities:
+      - entity: input_number.tempo_temps1
+        name: Bambous
+        icon: mdi:timer-sand-complete
+      - entity: input_number.tempo_temps2
+        name: Côté droit
+        icon: mdi:timer-sand-complete
+      - entity: input_number.tempo_temps3
+        name: Côté Gauche
+        icon: mdi:timer-sand-complete
+      - entity: input_number.tempo_temps4
+        name: Bordures
+        icon: mdi:timer-sand-complete
+      - entity: input_number.tempo_temps5
+        name: Potager
+        icon: mdi:timer-sand-complete
+      - entity: switch.gpio_arrosage_v2_lancer_l_arrosage_manuel
+        name: Lancer l'arrosage manuel
+    header:
+      type: picture
+      image: \local\plans\Perso\arrosage_bandeau2.png
+      tap_action:
+        action: none
+      hold_action:
+        action: none
+
 ```
