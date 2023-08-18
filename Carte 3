@@ -1,0 +1,28 @@
+type: vertical-stack
+cards:
+  - type: entities
+    entities:
+      - entity: input_number.tempo_temps1
+        name: Bambous
+        icon: mdi:timer-sand-complete
+      - entity: input_number.tempo_temps2
+        name: Côté droit
+        icon: mdi:timer-sand-complete
+      - entity: input_number.tempo_temps3
+        name: Côté Gauche
+        icon: mdi:timer-sand-complete
+      - entity: input_number.tempo_temps4
+        name: Bordures
+        icon: mdi:timer-sand-complete
+      - entity: input_number.tempo_temps5
+        name: Potager
+        icon: mdi:timer-sand-complete
+      - entity: switch.gpio_arrosage_v2_lancer_l_arrosage_manuel
+        name: Lancer l'arrosage manuel
+    header:
+      type: picture
+      image: \local\plans\Perso\arrosage_bandeau2.png
+      tap_action:
+        action: none
+      hold_action:
+        action: none
