@@ -1,4 +1,5 @@
 # Arrosage-Automatique-HomeAssistant
+
 Création d un système d arrosage automatique, piloté via Home Assistant
 Après quelques années passées sous Jeedom, j’ai migré ma domotique sur HA en mars dernier.
 Je vous partage mon projet actuel le plus abouti: l’arrosage automatique.
@@ -73,7 +74,20 @@ Ensuite, dans le fichier configuration.yaml il faut ajouter : input_number: !inc
     step: 1
     unit_of_measurement: "min"
 ```
-ensuite voici le code pour l ESP8266, c est mon premier code, donc il est certainement optimisable
+
+A cette étape, il vous faut éditer ou créer le fichier secret.yaml DANS le répartoir config / esphome de votre Home Assistant
+et y intégrer :
+
+key_arrosage: "votre token API de votre ESP"
+ota_arrosage: "votre token OTA"
+wifi_ssid: "le nom de votre réseau WIFI de la maison"
+wifi_password: "la clé de votre réseau wifi de la maison"
+mdp_hotspot: "la clé du hotspot de votre ESP en cas de plantage"
+server_username: le login que vous souhaitez pour accéder à l interface WEB de votre ESP
+server_password: le MDP que vous souhaitez pour accéder à l interface WEB de votre ESP
+
+Voici maintenant le code pour l ESP8266, à mettre dans ESPHome.
+C est mon premier code, il est donc certainement optimisable
 je l’ai créé a partir de la doc ESPHome, de divers projets glanés sur le net, mais également en tâtonnant avec ChatGPT que je découvre en même temps
 (il peut donner des pistes, mais rarement une solution a appliquer directement, mais cela m a aidé)
 
@@ -109,8 +123,9 @@ substitutions:
   pin_bouton1: D5
   pin_bouton2: D6
 
+# Pour les capteurs de température dallas:
   pin_dallas: D7
-  # Pour le capteur d'humidité du sol:
+# Pour le capteur d'humidité du sol:
   pin_moisure: A0
 
 # true ou flase en fonction de votre relay et des boutons, afin d aligner l état remonté sur l'état physique ( allumé/éteint )
@@ -118,6 +133,7 @@ substitutions:
   button_inverted: "true"
 
 # Configuration de l IP fixe, ici en "2"
+# adaptez le à votre configuration réseau et retirez les # plus bas 
   ip_device: 192.168.1.2
   ip_gateway: 192.168.1.254
   ip_subnet:  255.255.255.0
@@ -142,7 +158,9 @@ substitutions:
   switch_reboot: restart
   pushbutton1: pushbutton1
   pushbutton2: pushbutton2
+
 # ici, on donne le Numéro de série des capteurs de température dallas DS18B20
+# vous devez mettre entre les "" vos N° de série: 
   dallas_int: "0x64xxN°de serie dallas 1"
   dallas_ext: "0xcbN°de serie dallas 2"
 
@@ -182,10 +200,12 @@ ota:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  manual_ip:
-    static_ip: ${ip_device}
-    gateway: ${ip_gateway}
-    subnet: ${ip_subnet}
+
+# si vous souhaitez mettre une IP Fixe, configurez la plus haut, et retirez les #
+#  manual_ip:
+#    static_ip: ${ip_device}
+#    gateway: ${ip_gateway}
+#    subnet: ${ip_subnet}
 
 # Enable fallback hotspot (captive portal) in case wifi connection fails
 # En cas de plantage, un point d'acces est créé
