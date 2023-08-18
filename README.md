@@ -25,4 +25,4 @@ la troisième est à mon sens la plus intéressante: le temps d arrosage de chaq
 In HA, you need to create 5 entries
 dans HA il faut créer 5 entrées ( 5 vannes, 8 si vous en avez 8)
 
-![alt text](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/Carte%201)
+![alt code](https://github.com/SocrateMobile/Arrosage-Automatique-HomeAssistant/blob/main/Carte%201)
