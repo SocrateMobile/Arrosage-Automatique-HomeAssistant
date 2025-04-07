@@ -94,7 +94,8 @@ je l’ai créé a partir de la doc ESPHome, de divers projets glanés sur le ne
 (il peut donner des pistes, mais rarement une solution a appliquer directement, mais cela m a aidé)
 
 ```
-# code v2 ARROSAGE AUTOMATIQUE
+# ok
+# code v3 ARROSAGE AUTOMATIQUE
 # Controle d'une plaque de 8 relais, 5 utilisés dans le montage, GPIO D0,D1,D2,D3,D4
 # 2 capteurs de température Dallas DS18B20 (un interrieur au boitier, un température exterieure), sur D7
 # 1 capteur d'humidité du sol (yl38), sur A0
@@ -106,14 +107,14 @@ je l’ai créé a partir de la doc ESPHome, de divers projets glanés sur le ne
 
 substitutions:
 # nom des Zones d'arrosage
-  switch1_name: 1🎍Bambous
-  switch2_name: 2🌱Jardin côté droit
-  switch3_name: 3🌱Jardin côté gauche
-  switch4_name: 4🌹Bordures
-  switch5_name: 5🍅 Potager
-  # switch6_name: 6 Libre
-  # switch7_name: 7 Libre
-  # switch8_name: 8 Libre
+  switch1_name: 1🎍Les Bambous
+  switch2_name: 2🌱Le Jardin côté droit
+  switch3_name: 3🌱Le Jardin côté gauche
+  switch4_name: 4🌹Les Bordures
+  switch5_name: 5🍅 Le Potager
+  switch6_name: 6 Libre
+  switch7_name: 7 Libre
+  switch8_name: 8 Libre
 
 # ici, on donne les PIN du GPIO 8266 qui seront utilisés
   # Pour les relais
@@ -124,10 +125,9 @@ substitutions:
   pin_switch5: D4
   pin_bouton1: D5
   pin_bouton2: D6
-
-# Pour les capteurs de température dallas:
+  # Pour le capteur de température interieur & exterieur:
   pin_dallas: D7
-# Pour le capteur d'humidité du sol:
+  # Pour le capteur d'humidité du sol:
   pin_moisure: A0
 
 # true ou flase en fonction de votre relay et des boutons, afin d aligner l état remonté sur l'état physique ( allumé/éteint )
@@ -135,16 +135,15 @@ substitutions:
   button_inverted: "true"
 
 # Configuration de l IP fixe, ici en "2"
-# adaptez le à votre configuration réseau et retirez les # plus bas 
   ip_device: 192.168.1.2
   ip_gateway: 192.168.1.254
   ip_subnet:  255.255.255.0
 
 # Nom de l ESP qui sera vible sur votre box (en minuscules)
-  esphome_name: gpioarrosagev2
+  esphome_name: gpioarrosagev3
 
 # Frendly name qui sera visible dans Home Assistant
-  devicename: GPIO Arrosage V2
+  devicename: GPIO Arrosage V3
 
 # Timer des automatismes (ici, 5 minutes par Zone pour le premier et 10 minutes pour le second)
   Temps1: "5"
@@ -160,11 +159,9 @@ substitutions:
   switch_reboot: restart
   pushbutton1: pushbutton1
   pushbutton2: pushbutton2
-
 # ici, on donne le Numéro de série des capteurs de température dallas DS18B20
-# vous devez mettre entre les "" vos N° de série: 
-  dallas_int: "0x64xxN°de serie dallas 1"
-  dallas_ext: "0xcbN°de serie dallas 2"
+  dallas_int: "0x64041722a8XXXXXX" #adresse de votre DS18B20 interieur
+  dallas_ext: "0xcb0214814YYYYYYY" #adresse de votre DS18B20 exterieure
 
 # dans le reste du code, tout est variabilisé sur les labels de subsitution
 
@@ -174,10 +171,10 @@ esphome:
   on_boot:
     priority: -10
     then:
-        - switch.turn_off: relay4 
+        - switch.turn_off: relay1
+        - switch.turn_off: relay2 
         - switch.turn_off: relay3   
-        - switch.turn_off: relay2
-        - switch.turn_off: relay1 
+        - switch.turn_off: relay4
         - switch.turn_off: relay5
         
 esp8266:
@@ -188,26 +185,27 @@ logger:
 
 # Enable Home Assistant API
 # créez ici dans le repertoir EPSHome un fichier secret.yaml qui comportera les valeurs sensibles comme vos mots de passe
-# le déclaratif est simple à réaliser , dans le fichier secret.yaml, ajouter une ligne key_arrosage: la clé de votre API, ota_arrosage: l'OTA de votre arrosage etc
+# le déclaratif est simple à réaliser , dans le fichier secret.yaml, ajouter une ligne key_arrosage: la clé de votre API, 
+# ota_arrosage: l'OTA de votre arrosage etc
+
 api:
   encryption:
     key: !secret key_arrosage
 
 ota:
-  password: !secret ota_arrosage
+  - platform: esphome
+    password: !secret ota_arrosage
 
 # Ici, on lance la connexion de l'ESP8266 à votre WIFI, 
 # les paramètres sont à remplir plus haut, et dans le fichier sercet.ymal
 
 wifi:
-  ssid: !secret wifi_ssid
-  password: !secret wifi_password
-
-# si vous souhaitez mettre une IP Fixe, configurez la plus haut, et retirez les #
-#  manual_ip:
-#    static_ip: ${ip_device}
-#    gateway: ${ip_gateway}
-#    subnet: ${ip_subnet}
+  ssid: !secret wifi_ssid_arrosage
+  password: !secret wifi_password_arrosage
+  manual_ip:
+    static_ip: ${ip_device}
+    gateway: ${ip_gateway}
+    subnet: ${ip_subnet}
 
 # Enable fallback hotspot (captive portal) in case wifi connection fails
 # En cas de plantage, un point d'acces est créé
@@ -221,6 +219,14 @@ web_server:
   auth:
     username: !secret server_username
     password: !secret server_password
+    
+mqtt:
+  broker: 192.168.1.5
+  username: !secret server_username
+  password: !secret mqtt_password
+  discovery: False # disable entity discovery
+  discover_ip: True # enable device discovery
+
 
 captive_portal:
 # Enable Home Assistant API
@@ -235,39 +241,48 @@ text_sensor:
     name: "${devicename} IP Address"
 
 # Example configuration entry
-dallas:
-  - pin: ${pin_dallas}
- 
+# Ici , c est la récupération de la température interieure et exterieure 
+
+one_wire:
+  - platform: gpio
+    pin: ${pin_dallas}  # Replace with your actual GPIO pin
+
 globals:
   - id: temps1
     type: int
-    restore_value: no #pas besoin de conserver cette valeur puisque c'est Nodered qui l'envoie à chaque clignotement demandé.
-    initial_value: '1' #on pourrait s'en passer aussi, mais j'ai toujours peur de plantages éventuels si on ne met pas au moins une valeur dedans
+    restore_value: no 
+    initial_value: '0' 
 
   - id: temps2
     type: int
     restore_value: no
-    initial_value: '1'
+    initial_value: '0' 
 
   - id: temps3
     type: int
     restore_value: no 
-    initial_value: '300' 
+    initial_value: '0' 
 
   - id: temps4
     type: int
     restore_value: no
-    initial_value: '1'
+    initial_value: '0' 
 
   - id: temps5
     type: int
     restore_value: no 
-    initial_value: '1' 
+    initial_value: '0' 
 
 
 # Individual sensors
 sensor:
-
+  - platform: dallas_temp
+    address: ${dallas_int}
+    name: "Temperature Interieure"
+  - platform: dallas_temp
+    address: ${dallas_ext}
+    name: "Temperature Exterieure"
+    
   - platform: homeassistant
     id: tempo_temps1
     entity_id: input_number.tempo_temps1
@@ -314,13 +329,6 @@ sensor:
 
 
 
-# Ici , c est la récupération de la température interieure et exterieure 
-  - platform: dallas
-    address: ${dallas_int}
-    name: "Temperature Interieure"
-  - platform: dallas
-    address: ${dallas_ext}
-    name: "Temperature Exterieure"
 
   # Ici , c est la récupération de l humidité du sol 
   - platform: adc
@@ -330,15 +338,17 @@ sensor:
     update_interval: 60s
     unit_of_measurement: "%"
     filters:
-    - median:
-        window_size: 7
-        send_every: 4
-        send_first_at: 1
-    - calibrate_linear:
-        - 0.85 -> 0.00
-        - 0.44 -> 100.00
-    - lambda: if (x < 1) return 0; else return (x);
-    accuracy_decimals: 0
+    - multiply: 100
+ #   - median:
+ #       window_size: 7
+ #       send_every: 4
+ #       send_first_at: 1
+ #   - calibrate_linear:
+ #       - 0.85 -> 0.00
+ #       - 0.44 -> 100.00
+ #   - lambda: if (x < 1) return 0; else if (x > 100) return 100; else return (x);
+    accuracy_decimals: 2
+
 
   - platform: wifi_signal
     name: "${devicename} WiFi signal"
@@ -498,11 +508,7 @@ binary_sensor:
 #                                                                                                                  #
 ####################################################################################################################
 
-
-
 script:
-
-
   - id: script_${Temps1}
     mode: restart
     then:
@@ -517,10 +523,10 @@ script:
 # on ferme la vanne de la zone 1
 # on ouvre la vanne de la zone 2 et ainsi de suite                                                                                                                #
 ####################################################################################################################
-        - switch.turn_off: relay4 
+        - switch.turn_off: relay1
+        - switch.turn_off: relay2 
         - switch.turn_off: relay3   
-        - switch.turn_off: relay2
-        - switch.turn_off: relay1 
+        - switch.turn_off: relay4
         - switch.turn_off: relay5
         - switch.turn_on: relay1
         - delay: ${Temps1}min
@@ -543,21 +549,21 @@ script:
         - logger.log: "Arrosage ${switch5_name} terminé "
         - switch.turn_off: relay5    
 # idem, on en profite pour vérifier si tous les autres relais sont bien eteints
-        - switch.turn_off: relay4 
+        - switch.turn_off: relay1
+        - switch.turn_off: relay2 
         - switch.turn_off: relay3   
-        - switch.turn_off: relay2
-        - switch.turn_off: relay1 
+        - switch.turn_off: relay4
+        - switch.turn_off: relay5
 
   - id: script_${Temps2}
     mode: restart
-
     then:
         - logger.log: "Programme de ${Temps2} minutes"
 # idem que pour le premier scipt, avec un délai égale au temps 2
-        - switch.turn_off: relay4 
+        - switch.turn_off: relay1
+        - switch.turn_off: relay2 
         - switch.turn_off: relay3   
-        - switch.turn_off: relay2
-        - switch.turn_off: relay1 
+        - switch.turn_off: relay4
         - switch.turn_off: relay5
         - switch.turn_on: relay1
         - delay: ${Temps2}min
@@ -580,11 +586,11 @@ script:
         - logger.log: "Arrosage ${switch5_name} terminé "
         - switch.turn_off: relay5    
 # idem, on en profite pour vérifier si tous les autres relais sont bien eteints
-        - switch.turn_off: relay4 
+        - switch.turn_off: relay1
+        - switch.turn_off: relay2 
         - switch.turn_off: relay3   
-        - switch.turn_off: relay2
-        - switch.turn_off: relay1 
-
+        - switch.turn_off: relay4
+        - switch.turn_off: relay5
 
   - id: tempo_manuelle
     mode: restart
@@ -600,38 +606,49 @@ script:
 # on ferme la vanne de la zone 1
 # on ouvre la vanne de la zone 2 et ainsi de suite                                                                                                                #
 ####################################################################################################################
-        - switch.turn_off: relay4 
-        - switch.turn_off: relay3   
-        - switch.turn_off: relay2
-        - switch.turn_off: relay1 
         - switch.turn_off: relay5
-        - switch.turn_on: relay1
-        - logger.log: id(temps1) minutes d'arrosage pour ${switch1_name}
-        - delay: !lambda 'return id(temps1) * 60000;'  # Convertit la valeur en secondes
-        - logger.log: "Arrosage ${switch1_name} terminé "
-        - switch.turn_off: relay1    
-        - switch.turn_on: relay2
-        - delay: !lambda 'return id(temps2) * 60000;'  # Convertit la valeur en secondes
-        - logger.log: "Arrosage ${switch2_name} terminé "
-        - switch.turn_off: relay2    
-        - switch.turn_on: relay3
-        - delay: !lambda 'return id(temps3) * 60000;'  # Convertit la valeur en secondes
-        - logger.log: "Arrosage ${switch3_name} terminé "
-        - switch.turn_off: relay3    
-        - switch.turn_on: relay4
-        - delay: !lambda 'return id(temps4) * 60000;'  # Convertit la valeur en secondes
-        - logger.log: "Arrosage ${switch4_name} terminé "
-        - switch.turn_off: relay4    
-        - switch.turn_on: relay5
-        - delay: !lambda 'return id(temps5) * 60000;'  # Convertit la valeur en secondes
-        - logger.log: "Arrosage ${switch5_name} terminé "
-        - switch.turn_off: relay5    
-# idem, on en profite pour vérifier si tous les autres relais sont bien eteints
         - switch.turn_off: relay4 
         - switch.turn_off: relay3   
         - switch.turn_off: relay2
         - switch.turn_off: relay1
+# l'odre des déclenchements des relai peut changer 
 
+        - switch.turn_on: relay2
+        - logger.log: id(temps2) minutes d'arrosage pour ${switch2_name}
+        - delay: !lambda 'return id(temps2) * 60000;'  # Convertit la valeur en minutes
+        - logger.log: "Arrosage ${switch2_name} terminé "
+        - switch.turn_off: relay2    
+        
+        - switch.turn_on: relay3
+        - logger.log: id(temps3) minutes d'arrosage pour ${switch3_name}
+        - delay: !lambda 'return id(temps3) * 60000;'  # Convertit la valeur en minutes
+        - logger.log: "Arrosage ${switch3_name} terminé "
+        - switch.turn_off: relay3    
+        
+        - switch.turn_on: relay5
+        - logger.log: id(temps5) minutes d'arrosage pour ${switch5_name}
+        - delay: !lambda 'return id(temps5) * 60000;'  # Convertit la valeur en minutes
+        - logger.log: "Arrosage ${switch5_name} terminé "
+        - switch.turn_off: relay5
+
+        - switch.turn_on: relay4
+        - logger.log: id(temps4) minutes d'arrosage pour ${switch4_name}
+        - delay: !lambda 'return id(temps4) * 60000;'  # Convertit la valeur en minutes
+        - logger.log: "Arrosage ${switch4_name} terminé "
+        - switch.turn_off: relay4    
+       
+        - switch.turn_on: relay1
+        - logger.log: id(temps1) minutes d'arrosage pour ${switch1_name}
+        - delay: !lambda 'return id(temps1) * 60000;'  # Convertit la valeur en minutes
+        - logger.log: "Arrosage ${switch1_name} terminé "
+        - switch.turn_off: relay1    
+        
+# idem, on en profite pour vérifier si tous les autres relais sont bien eteints
+        - switch.turn_off: relay5
+        - switch.turn_off: relay4 
+        - switch.turn_off: relay3   
+        - switch.turn_off: relay2
+        - switch.turn_off: relay1
 
         # Enjoy #
         # 
