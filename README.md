@@ -22,6 +22,8 @@ la première carte est a utiliser pour soit lancer une séquence d’arrosage de
 la deuxième, sert visualiser les zones d arrosage, et a les démarrer / arrêter manuellement
 la troisième est à mon sens la plus intéressante: le temps d arrosage de chaque zone peut être ajusté entre 1 et 20mn, et on lance l enchainement des séquences
 
+[![Buy Me A Coffee](https://img.buymeacoffee.com/button-api/?text=Buy+me+a+coffee&emoji=☕&slug=Socrate&button_colour=FFDD00&font_colour=000000&font_family=Poppins&outline_colour=000000&coffee_colour=ffffff)](https://www.buymeacoffee.com/Socrate)
+
 Commencons...
 
 dans HA il faut créer 5 entrées nommées tempo_temps1 à tempo_temps5 ( 8 si vous en avez 8 vannes)
